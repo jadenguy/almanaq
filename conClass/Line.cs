@@ -2,7 +2,7 @@ namespace conClass
 {
     public class Line
     {
-        public Line(char letter, int nextHeight, LineType type = LineType.End)
+        public Line(char letter, int nextHeight, LineType type = LineType.Continue)
         {
             Letter = letter;
             NextHeight = nextHeight;
