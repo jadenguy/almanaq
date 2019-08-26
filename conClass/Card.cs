@@ -22,28 +22,31 @@ namespace conClass
             top.Append(side[0].Letter);
             middle.Append(side[1].Letter);
             bottom.Append(side[2].Letter);
-            top.Append("---");
+            top.Append("--");
             middle.Append("--");
-            bottom.Append("-");
-            if (side[0].NextHeight == 0) { top.Append("---"); }
-            else { top.Append("\\"); }
-            if (side[2].NextHeight == 2) { bottom.Append("---"); }
-            else { bottom.Append("/"); }
-            if (side[1].NextHeight == 0)
+            bottom.Append("--");
+            if (side[0].NextHeight == 0)
             {
-                top.Append("/-");
-                middle.Append("/");
+                top.Append("------");
+                middle.Append("\\ /--");
+                bottom.Append("X---");
             }
-            else if (side[1].NextHeight == 2)
+            else
             {
-                middle.Append("\\");
-                bottom.Append("\\-");
-            }
-            else  { 
-                top.Append(" /-");
-                middle.Append(" X -");
-                bottom.Append(" \\-"); 
+                top.Append("\\");
+                if (side[1].NextHeight == 0)
+                {
+                    top.Append(" /-");
+                    middle.Append("X--");
+                    bottom.Append("--");
                 }
+                else
+                {
+                    top.Append("   /-");
+                    middle.Append("\\./-");
+                    bottom.Append("X--");
+                }
+            }
 
 
             System.Diagnostics.Debug.WriteLine(top);
