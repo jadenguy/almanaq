@@ -14,49 +14,87 @@ namespace conClass
             foreach (var loop in permutations)
             {
                 // System.Diagnostics.Debug.WriteLine(string.Join<Card>(" ", loop));
-                for (int i = 0; i < 1; i++)
+                for (int i = 5; i < 6; i++)
                 {
-                    var flipMask = EverySubSet(4);
-                    System.Diagnostics.Debug.WriteLine(Process(loop, i));
+                    string[] message = Process(loop, i);
+                    // System.Diagnostics.Debug.WriteLine(string.Join('\n', message));
                 }
             }
         }
 
-        private static bool[][] EverySubSet(int v)
+        private static bool[][] EveryBitmask(int Size)
         {
-            var ret = new bool[v * v][];
-            for (int i = 0; i < v * v; i++)
+            int v = 2 << (Size - 1);
+            var ret = new bool[v][];
+            int length = Size;
+            for (int i = 0; i < Math.Pow(2, length); i++)
             {
-                ret[i] = new bool[v];
-                for (int j = 0; j < v; j++)
+                ret[i] = new bool[Size];
+                for (int j = 0; j < length; j++)
                 {
-                    if ((i & j) == i) { ret[i][j] = true; }
-                    else { ret[i][j] = false; }
+                    if ((i & 1 << length - j - 1) != 0)
+                    {
+                        ret[i][j] = true;
+                    }
                 }
             }
             return ret;
         }
 
-        private static string Process(Card[] loop, int twistAfter)
+        private static string[] Process(Card[] Loop, int TwistAfter)
+        {
+            char firstLetter = Loop[0].SideA[0].Letter;
+            var flipMask = EveryBitmask(Loop.Length - 1); //you can't flip the starting position
+            int length = flipMask.Length;
+            var ret = new string[length];
+            const int deadLockedAt = 50;
+            System.Diagnostics.Debug.WriteLine("");
+            // System.Diagnostics.Debug.WriteLine("");
+            System.Diagnostics.Debug.Write(string.Join("", Loop.Select(k => k.ToString())));
+            System.Diagnostics.Debug.WriteLine(TwistAfter, " Twist");
+            for (int x = 0; x < length; x++)
+            {
+                var bitMask = flipMask[x];
+                var success = TryBuildString(Loop, deadLockedAt, bitMask, TwistAfter, firstLetter, out var result);
+                ret[x] = result;
+                // if (success)
+                // {
+                System.Diagnostics.Debug.Write("0" + string.Join("", flipMask[x].Select(g => g ? '0' : '1')));
+                System.Diagnostics.Debug.Write("\t");
+                System.Diagnostics.Debug.WriteLine(ret[x]);
+                // }
+            }
+            System.Diagnostics.Debug.WriteLine("");
+            return ret;
+        }
+        private static bool TryBuildString(Card[] Loop, int deadLockedAt, bool[] bitMask, int TwistAfter, char firstLetter, out string ret)
         {
             LineType place;
-            var ret = string.Empty;
-            var i = 0;
-            var height = 0;
+            ret = firstLetter.ToString();
             var breakDeadlock = 0;
-            const int deadLockedAt = 50;
+            var i = 1;
+            var height = 0;
+            var twist = false;
             do
             {
-                Line line = loop[i].SideA[height];
+                bool top;
+                if (i > 0) { top = bitMask[i - 1]; }
+                else { top = true; }
+                Line line = Loop[i].GetLine(height, top ^ twist);
                 ret += line.Letter;
                 place = line.Type;
                 height = line.NextHeight;
                 i++;
-                i = i % loop.Length;
+                i = i % Loop.Length;
                 breakDeadlock++;
-                if (breakDeadlock == deadLockedAt) { place = LineType.End; }
-            } while (place != LineType.End);
-            return ret;
+                if (breakDeadlock >= deadLockedAt) { place = LineType.Start; }
+                if (i == TwistAfter)
+                {
+                    twist ^= twist;
+                }
+            } while (place == LineType.Continue);
+            if (place == LineType.Start) { ret += "INVALID LOOP"; }
+            return place == LineType.End;
         }
         private static Card[][] GeneratePermutations(int count)
         {
