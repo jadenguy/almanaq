@@ -7,7 +7,7 @@ namespace conClass
         public Line[] SideA { get; set; } = new Line[3];
         public Line[] SideB { get; set; } = new Line[3];
         public bool Flipped = false;
-        public override string ToString() => SideA[0].Letter.ToString();
+        public override string ToString() => SideA[0].Letter.ToString() + SideB[0].Letter.ToString();
         public string Print(bool back = false)
         {
 
@@ -27,24 +27,35 @@ namespace conClass
             bottom.Append("--");
             if (side[0].NextHeight == 0)
             {
-                top.Append("------");
-                middle.Append("\\ /--");
-                bottom.Append("X---");
+                top.Append("-----");
+                middle.Append("\\ /-");
+                bottom.Append("X--");
             }
             else
             {
                 top.Append("\\");
                 if (side[1].NextHeight == 0)
                 {
-                    top.Append(" /-");
-                    middle.Append("X--");
-                    bottom.Append("--");
+                    top.Append(" /");
+                    middle.Append("X");
+                    if (side[2].NextHeight == 1)
+                    {
+                        top.Append("--");
+                        middle.Append(" /-");
+                        bottom.Append("X--");
+                    }
+                    else
+                    {
+                        top.Append("-");
+                        middle.Append("--");
+                        bottom.Append("--");
+                    }
                 }
                 else
                 {
                     top.Append("   /-");
-                    middle.Append("\\./-");
-                    bottom.Append("X--");
+                    middle.Append("\\./--");
+                    bottom.Append("X---");
                 }
             }
 
