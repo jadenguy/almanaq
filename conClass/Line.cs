@@ -12,6 +12,7 @@ namespace conClass
         public char Letter { get; set; }
         public int NextHeight { get; set; }
         public LineType Type { get; set; }
+        public override string ToString() => $"{Letter} to {NextHeight}";
     }
 
     public enum LineType
