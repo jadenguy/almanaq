@@ -12,10 +12,8 @@ namespace conClass
             IEnumerable<Card[]> permutations = GeneratePermutations(count);
             foreach (var loop in permutations)
             {
-                for (int i = 0; i < loop.Length + 1; i++)
-                {
-                    string[] message = Process(loop, i);
-                }
+                Process(loop, true);
+                Process(loop, false);
             }
         }
 
@@ -38,7 +36,7 @@ namespace conClass
             return ret;
         }
 
-        private static string[] Process(Card[] Loop, int TwistAfter)
+        private static string[] Process(Card[] Loop, bool TwistAfter)
         {
             char firstLetter = Loop[0].SideA[0].Letter;
             var v = new bool[] { false };
@@ -52,7 +50,7 @@ namespace conClass
             }).ToArray(); //you can't flip the starting position
             int length = flipMask.Length;
             var ret = new string[length];
-            const int deadLockedAt = 50;
+            const int deadLockedAt = 100;
             System.Diagnostics.Debug.WriteLine("");
             // System.Diagnostics.Debug.WriteLine("");
             System.Diagnostics.Debug.Write(string.Join(",", Loop.Select(k => k.ToString())));
@@ -64,16 +62,20 @@ namespace conClass
                 ret[x] = result;
                 if (success)
                 {
-                    System.Diagnostics.Debug.Write("0" + string.Join("", flipMask[x].Select(g => g ? '0' : '1')));
+                    for (int i = 0; i < bitMask.Length; i++)
+                    {
+                        Loop[i].Print(bitMask[i]);
+                        System.Diagnostics.Debug.WriteLine("");
+                    }
+                    System.Diagnostics.Debug.Write("0" + string.Join("", flipMask[x].Select(g => g ? '1' : '0')));
                     System.Diagnostics.Debug.Write("\t");
                     System.Diagnostics.Debug.WriteLine(ret[x]);
                 }
-
             }
             System.Diagnostics.Debug.WriteLine("");
             return ret;
         }
-        private static bool TryBuildString(Card[] Loop, int deadLockedAt, bool[] bitMask, int TwistAfter, char firstLetter, out string ret)
+        private static bool TryBuildString(Card[] Loop, int deadLockedAt, bool[] bitMask, bool TwistAfter, char firstLetter, out string ret)
         {
             LineType place;
             ret = firstLetter.ToString();
@@ -83,9 +85,11 @@ namespace conClass
             var twist = false;
             do
             {
-                bool top;
-                if (i > 0) { top = bitMask[i]; }
-                else { top = true; }
+                if (TwistAfter && i == 0)
+                {
+                    twist = !twist;
+                }
+                bool top = !bitMask[i];
                 Line line = Loop[i].GetLine(height, top ^ twist);
                 ret += line.Letter;
                 place = line.Type;
@@ -94,10 +98,6 @@ namespace conClass
                 i = i % Loop.Length;
                 breakDeadlock++;
                 if (breakDeadlock >= deadLockedAt) { place = LineType.Start; }
-                if (i == TwistAfter)
-                {
-                    twist = !twist;
-                }
             } while (place == LineType.Continue);
             if (place == LineType.Start) { ret += " **INVALID LOOP**"; }
             return place == LineType.End;
@@ -106,10 +106,12 @@ namespace conClass
         {
             IEnumerable<Card> loop = SetUp(count);
             var permutations = new List<Card[]>();
-            for (int i = 3; i >=0; i--)
+            int i = 3; // take 5 cards since 1 and 2 are guaranteed
+            // while ( i >= 0) //or less
             {
                 IEnumerable<Card[]> enumerable = loop.Skip(1).Take(i + 1).EveryPermutation().Select(k => loop.Take(1).Union(k).ToArray());
                 permutations.AddRange(enumerable);
+                i--;
             }
             return permutations.ToArray();
         }
