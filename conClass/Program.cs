@@ -10,14 +10,11 @@ namespace conClass
         {
             const int count = 5;
             IEnumerable<Card[]> permutations = GeneratePermutations(count);
-            // System.Diagnostics.Debug.WriteLine(string.Join('\n', permutations.Select(x => string.Join<Card>(" ", x))));
             foreach (var loop in permutations)
             {
-                // System.Diagnostics.Debug.WriteLine(string.Join<Card>(" ", loop));
-                for (int i = 5; i < 6; i++)
+                for (int i = 0; i < 6; i++)
                 {
                     string[] message = Process(loop, i);
-                    // System.Diagnostics.Debug.WriteLine(string.Join('\n', message));
                 }
             }
         }
@@ -44,7 +41,8 @@ namespace conClass
         private static string[] Process(Card[] Loop, int TwistAfter)
         {
             char firstLetter = Loop[0].SideA[0].Letter;
-            var flipMask = EveryBitmask(Loop.Length - 1); //you can't flip the starting position
+            var v = new bool[] { false };
+            var flipMask = EveryBitmask(Loop.Length - 1).Select(g => v.Union(g).ToArray()).ToArray(); //you can't flip the starting position
             int length = flipMask.Length;
             var ret = new string[length];
             const int deadLockedAt = 50;
@@ -57,12 +55,12 @@ namespace conClass
                 var bitMask = flipMask[x];
                 var success = TryBuildString(Loop, deadLockedAt, bitMask, TwistAfter, firstLetter, out var result);
                 ret[x] = result;
-                // if (success)
-                // {
-                System.Diagnostics.Debug.Write("0" + string.Join("", flipMask[x].Select(g => g ? '0' : '1')));
-                System.Diagnostics.Debug.Write("\t");
-                System.Diagnostics.Debug.WriteLine(ret[x]);
-                // }
+                if (success)
+                {
+                    System.Diagnostics.Debug.Write("0" + string.Join("", flipMask[x].Select(g => g ? '0' : '1')));
+                    System.Diagnostics.Debug.Write("\t");
+                    System.Diagnostics.Debug.WriteLine(ret[x]);
+                }
             }
             System.Diagnostics.Debug.WriteLine("");
             return ret;
@@ -78,7 +76,7 @@ namespace conClass
             do
             {
                 bool top;
-                if (i > 0) { top = bitMask[i - 1]; }
+                if (i > 0) { top = bitMask[i]; }
                 else { top = true; }
                 Line line = Loop[i].GetLine(height, top ^ twist);
                 ret += line.Letter;
@@ -93,12 +91,13 @@ namespace conClass
                     twist ^= twist;
                 }
             } while (place == LineType.Continue);
-            if (place == LineType.Start) { ret += "INVALID LOOP"; }
+            if (place == LineType.Start) { ret += " **INVALID LOOP**"; }
             return place == LineType.End;
         }
         private static Card[][] GeneratePermutations(int count)
         {
             IEnumerable<Card> loop = SetUp(count);
+
             var permutations = loop.Skip(1).EveryPermutation().Select(k => loop.Take(1).Union(k).ToArray()).ToArray();
             return permutations;
         }
@@ -146,6 +145,13 @@ namespace conClass
             card.SideB[0] = new Line('K', 1);
             card.SideB[1] = new Line('A', 2);
             card.SideB[2] = new Line('R', 0);
+            foreach (var item in loop)
+            {
+                item.Print();
+                System.Diagnostics.Debug.WriteLine("");
+                item.Print(true);
+                System.Diagnostics.Debug.WriteLine("");
+            }
             return loop;
         }
 
