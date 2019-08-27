@@ -1,4 +1,4 @@
-namespace conClass
+namespace Loop
 {
     public class Line
     {
@@ -8,13 +8,11 @@ namespace conClass
             NextHeight = nextHeight;
             Type = type;
         }
-
         public char Letter { get; set; }
         public int NextHeight { get; set; }
         public LineType Type { get; set; }
         public override string ToString() => $"{Letter} to {NextHeight}";
     }
-
     public enum LineType
     {
         Continue, Start, End

@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace conClass
+namespace Loop
 {
     public class Card
     {
@@ -54,39 +54,7 @@ namespace conClass
                 middle.Append("\\/-/\\-");
                 bottom.Append("/\\----");
             }
-            else
-            {
-                throw new System.Exception();
-            }
-
-
-            // top.Append("\\");
-            //                 if (side[1].NextHeight == 0)
-            //                 {
-            //                     top.Append(" /");
-            //                     middle.Append("X");
-            //                     if (side[2].NextHeight == 1)
-            //                     {
-            //                         top.Append("--");
-            //                         middle.Append(" /-");
-            //                         bottom.Append("X--");
-            //                     }
-            //                     else
-            //                     {
-            //                         top.Append("-");
-            //                         middle.Append("--");
-            //                         bottom.Append("--");
-            //                     }
-            //                 }
-            //                 else
-            //                 {
-            //                     top.Append("   /-");
-            //                     middle.Append("\\./--");
-            //                     bottom.Append("X---");
-            //                 }
-            // System.Diagnostics.Debug.WriteLine(topRow);
-            // System.Diagnostics.Debug.WriteLine(middle);
-            // System.Diagnostics.Debug.WriteLine(bottom);
+            else { throw new System.Exception(); }
             return new string[] { topRow.ToString(), middle.ToString(), bottom.ToString() };
         }
         public Line GetLine(int height, bool top)

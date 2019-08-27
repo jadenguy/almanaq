@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "newClass", "newClass\newClass.csproj", "{6346A3BD-2B26-4A2E-B68F-C6934F457272}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loop", "newClass\Loop.csproj", "{6346A3BD-2B26-4A2E-B68F-C6934F457272}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "newClass.Test", "newClass.Test\newClass.Test.csproj", "{6E2AA412-5FEC-41A1-92FD-FF90E9D5DE6A}"
 EndProject
