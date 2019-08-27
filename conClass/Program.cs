@@ -40,15 +40,14 @@ namespace conClass
         {
             char firstLetter = Loop[0].SideA[0].Letter;
             var v = new bool[] { false };
-            var flipMask = EveryBitmask(Loop.Length - 1);
-            var h = flipMask.Select(g =>
+            var flipMask = EveryBitmask(Loop.Length - 1).Select(g =>
             {
                 var q = new bool[Loop.Length];
                 q[0] = false;
                 Array.Copy(g, 0, q, 1, g.Length);
                 return q;
             }).ToArray(); //you can't flip the starting position
-            int length = flipMask.Length;
+            int length = EveryBitmask(Loop.Length - 1).Length;
             var ret = new string[length];
             const int deadLockedAt = 100;
             System.Diagnostics.Debug.WriteLine("");
@@ -57,19 +56,38 @@ namespace conClass
             System.Diagnostics.Debug.WriteLine(TwistAfter, " Twist");
             for (int x = 0; x < length; x++)
             {
-                var bitMask = h[x];
+                var bitMask = flipMask[x];
                 var success = TryBuildString(Loop, deadLockedAt, bitMask, TwistAfter, firstLetter, out var result);
                 ret[x] = result;
                 if (success)
                 {
+                    var printer = new string[3];
                     for (int i = 0; i < bitMask.Length; i++)
                     {
-                        Loop[i].Print(bitMask[i]);
-                        System.Diagnostics.Debug.WriteLine("");
+                        var print = Loop[i].Print(bitMask[i]);
+                        for (int p = 0; p < 3; p++)
+                        {
+                            printer[p] += print[p];
+                        }
                     }
-                    System.Diagnostics.Debug.Write("0" + string.Join("", flipMask[x].Select(g => g ? '1' : '0')));
+                    if (TwistAfter)
+                    {
+                        for (int i = 0; i < bitMask.Length; i++)
+                        {
+                            var print = Loop[i].Print(!bitMask[i]);
+                            for (int p = 0; p < 3; p++)
+                            {
+                                printer[p] += print[p];
+                            }
+                        }
+                    }
+                    foreach (var row in printer)
+                    {
+                        System.Diagnostics.Debug.WriteLine(row);
+                    }
+                    System.Diagnostics.Debug.Write(string.Join("", bitMask.Select(g => g ? '1' : '0')));
                     System.Diagnostics.Debug.Write("\t");
-                    System.Diagnostics.Debug.WriteLine(ret[x]);
+                    System.Diagnostics.Debug.WriteLine(result);
                 }
             }
             System.Diagnostics.Debug.WriteLine("");
@@ -107,7 +125,7 @@ namespace conClass
             IEnumerable<Card> loop = SetUp(count);
             var permutations = new List<Card[]>();
             int i = 3; // take 5 cards since 1 and 2 are guaranteed
-            // while ( i >= 0) //or less
+            // while ( i >= 0) // take fewer than 5 cards
             {
                 IEnumerable<Card[]> enumerable = loop.Skip(1).Take(i + 1).EveryPermutation().Select(k => loop.Take(1).Union(k).ToArray());
                 permutations.AddRange(enumerable);
