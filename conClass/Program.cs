@@ -16,7 +16,6 @@ namespace conClass
                 Process(loop, false);
             }
         }
-
         private static bool[][] EveryBitmask(int Size)
         {
             int v = 2 << (Size - 1);
@@ -35,7 +34,6 @@ namespace conClass
             }
             return ret;
         }
-
         private static string[] Process(Card[] Loop, bool TwistAfter)
         {
             char firstLetter = Loop[0].SideA[0].Letter;
@@ -85,9 +83,10 @@ namespace conClass
                     {
                         System.Diagnostics.Debug.WriteLine(row);
                     }
-                    System.Diagnostics.Debug.Write(string.Join("", bitMask.Select(g => g ? '1' : '0')));
+                    System.Diagnostics.Debug.Write(string.Join("", bitMask.Select(g => g ? '1' : '0')) + (TwistAfter ? 'X' : '-'));
                     System.Diagnostics.Debug.Write("\t");
                     System.Diagnostics.Debug.WriteLine(result);
+                    System.Diagnostics.Debug.WriteLine("");
                 }
             }
             System.Diagnostics.Debug.WriteLine("");
@@ -133,7 +132,6 @@ namespace conClass
             }
             return permutations.ToArray();
         }
-
         private static IEnumerable<Card> SetUp(int count)
         {
             var loop = new Card[count];
@@ -179,14 +177,14 @@ namespace conClass
             card.SideB[2] = new Line('R', 0);
             foreach (var item in loop)
             {
-                item.Print();
-                System.Diagnostics.Debug.WriteLine("");
-                item.Print(true);
-                System.Diagnostics.Debug.WriteLine("");
+
+                System.Diagnostics.Debug.WriteLine("Front");
+                System.Diagnostics.Debug.WriteLine(string.Join("\n", item.Print()));
+                System.Diagnostics.Debug.WriteLine("Back");
+                System.Diagnostics.Debug.WriteLine(string.Join("\n", item.Print(true)));
             }
             return loop;
         }
-
         private static IEnumerable<IEnumerable<T>> EveryPermutation<T>(this IEnumerable<T> array)
         {
             if (array.Count() == 1) { yield return array; }
