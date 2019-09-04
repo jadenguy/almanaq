@@ -50,7 +50,6 @@ namespace conClass
             var ret = new string[length];
             const int deadLockedAt = 100;
             System.Diagnostics.Debug.WriteLine("");
-            // System.Diagnostics.Debug.WriteLine("");
             System.Diagnostics.Debug.Write(string.Join(",", Loop.Select(k => k.ToString())));
             System.Diagnostics.Debug.WriteLine(TwistAfter, " Twist");
             for (int x = 0; x < length; x++)
@@ -83,10 +82,13 @@ namespace conClass
                     foreach (var row in printer)
                     {
                         System.Diagnostics.Debug.WriteLine(row);
+                        System.Console.WriteLine(row);
                     }
                     System.Diagnostics.Debug.Write(string.Join("", bitMask.Select(g => g ? '1' : '0')) + (TwistAfter ? 'X' : '-'));
                     System.Diagnostics.Debug.Write("\t");
                     System.Diagnostics.Debug.WriteLine(result);
+                    System.Console.WriteLine(result);
+                    System.Console.WriteLine();
                     System.Diagnostics.Debug.WriteLine("");
                 }
             }
